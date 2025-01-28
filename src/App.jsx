@@ -1,71 +1,101 @@
 import { useState } from "react";
-import "../src/abi.json"
+import "../src/abi.json";
 import "./App.css";
 import { ethers } from "ethers";
+import { ToastContainer, toast } from "react-toastify";
 
 function App() {
-   const [depositAmount, setDepositAmount] = useState("");
-   const [withdrawAmount, setWithdrawAmount] = useState("");
-   const [balance, setBalance] = useState("");
-   const contractAddress = "0xd9145CCE52D386f254917e481eB44e9943F39138";
+  const [depositAmount, setDepositAmount] = useState("");
+  const [withdrawAmount, setWithdrawAmount] = useState("");
+  const [balance, setBalance] = useState("");
+  const contractAddress = "0xd9145CCE52D386f254917e481eB44e9943F39138";
 
-   async function requestAccounts() {
-     await window.ethereum.request({ method: "eth_requestAccounts" });
-   }
+  async function requestAccounts() {
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+  }
 
-   async function depositFunds() {
-     if (typeof window.ethereum !== "undefined") {
-       await requestAccounts();
-       try {
-         const provider = new ethers.BrowserProvider(window.ethereum);
-         const signer = await provider.getSigner();
-         const contract = new ethers.Contract(contractAddress, abi, signer);
-         const tx = await contract.deposit({
-           value: ethers.parseEther(depositAmount),
+  async function depositFunds() {
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccounts();
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const contract = new ethers.Contract(contractAddress, abi, signer);
+        const tx = await contract.deposit({
+          value: ethers.parseEther(depositAmount),
+        });
+        await tx.wait();
+        // console.log("Deposit successful");
+        toast.success("Deposit successful", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      } catch (error) {
+        // console.error("Deposit failed:", error);
+         toast.error("Deposit failed:", error, {
+           position: toast.POSITION.BOTTOM_LEFT,
          });
-         await tx.wait();
-         console.log("Deposit successful");
-       } catch (error) {
-         console.error("Deposit failed:", error);
-       }
-     } else {
-       console.error("Ethereum wallet is not detected");
-     }
-   }
+      }
+    } else {
+      // console.error("Ethereum wallet is not detected");
+      toast.error("Ethereum wallet is not detected:", error, {
+        position: toast.POSITION.BOTTOM_LEFT,
+      });
+    }
+  }
 
-   async function withdrawFunds() {
-     if (typeof window.ethereum !== "undefined") {
-       await requestAccounts();
-       try {
-         const provider = new ethers.BrowserProvider(window.ethereum);
-         const signer = await provider.getSigner();
-         const contract = new ethers.Contract(contractAddress, abi, signer);
-         const tx = await contract.withdraw(ethers.parseEther(withdrawAmount));
-         await tx.wait();
-         console.log("Withdrawal successful");
-       } catch (error) {
-         console.error("Withdrawal failed:", error);
-       }
-     } else {
-       console.error("Ethereum wallet is not detected");
-     }
-   }
+  async function withdrawFunds() {
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccounts();
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const contract = new ethers.Contract(contractAddress, abi, signer);
+        const tx = await contract.withdraw(ethers.parseEther(withdrawAmount));
+        await tx.wait();
+        // console.log("Withdrawal successful");
+        toast.success("Withdrawal successful", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      } catch (error) {
+        // console.error("Withdrawal failed:", error);
+        toast.error("Withdrawal failed:", error, {
+          position: toast.POSITION.BOTTOM_LEFT,
+        });
+      }
+    } else {
+      // console.error("Ethereum wallet is not detected");
+      toast.error("Ethereum wallet is not detected!", {
+        position: toast.POSITION.BOTTOM_LEFT,
+      });
+    }
+  }
 
-   async function getContractBalance() {
-     if (typeof window.ethereum !== "undefined") {
-       try {
-         const provider = new ethers.BrowserProvider(window.ethereum);
-         const contract = new ethers.Contract(contractAddress, abi, provider);
-         const balance = await contract.getBalance();
-         setBalance(ethers.formatEther(balance));
-         console.log("Balance retrieved:", ethers.formatEther(balance));
-       } catch (error) {
-         console.error("Failed to retrieve balance:", error);
-       }
-     } else {
-       console.error("Ethereum wallet is not detected");
-     }
-   }
+  async function getContractBalance() {
+    if (typeof window.ethereum !== "undefined") {
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const contract = new ethers.Contract(contractAddress, abi, provider);
+        const balance = await contract.getBalance();
+        setBalance(ethers.formatEther(balance));
+        // console.log("Balance retrieved:", ethers.formatEther(balance));
+        toast.success("Balance retrieved:", ethers.formatEther(balance), {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      } catch (error) {
+        // console.error("Failed to retrieve balance:", error);
+         toast.error("Failed to retrieve balance:", error, {
+           position: toast.POSITION.BOTTOM_LEFT,
+         });
+      }
+    } else {
+      // console.error("Ethereum wallet is not detected");
+      // toast("Ethereum wallet is not detected");
+      
+      toast.error("Something went wrong!", {
+        position: toast.POSITION.BOTTOM_LEFT,
+      });
+    }
+  }
 
   return (
     <>
@@ -82,7 +112,7 @@ function App() {
           <input
             type="text"
             onChange={(e) => setDepositAmount(e.target.value)}
-            value={depositAmount}
+            // value={depositAmount}
             className="mb-4 py-2 px-2 border border-[#123] border-solid rounded-md"
             placeholder="Enter deposit amount (ETH)"
           />
@@ -127,6 +157,7 @@ function App() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }
