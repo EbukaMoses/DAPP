@@ -1,8 +1,15 @@
-# React + Vite
+## SMART CONTRACT 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+# CONTRACT NAME 
+ ASSESSMENT
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+# CONTRACT ADDRESS
+0xd9145CCE52D386f254917e481eB44e9943F39138
+
+# AUTHOR 
+
+Ebuka Moses 
+
+Email: okoyemoses83@gmail.com
